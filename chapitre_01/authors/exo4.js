@@ -4,71 +4,45 @@ var port = 8000;
 
 // EXERCICE 4
 
-// app.get('/authors/:id', (req, res) => {
-//     var authors = req.params.number;
-//     var books = "";
-    
-//     switch (authors) {
 
-//         case "1":
-//             books = "Beowulf";
-//             break;
+var authors = "";
+var books = "";
 
-//         case "2":
-//             books = "Hamlet, Othello, Romeo and Juliet, MacBeth";
-//             break;
+var allInfo = [
+    {
+        authors: "Lawrence Nowell , UK",
+        books: "Beowulf",
+    },
+    {
+        authors: "William Shakespeare , UK",
+        books: "Hamlet, Othello, Romeo and Juliet, MacBeth",
+    },
+    {
+        authors: "Charles Dickens , US",
+        books: "Oliver Twist, A Christmas Carol",
+    },
+    {
+        authors: "Oscar Wilde , UK",
+        books: "The Picture of Dorian Gray, The Importance of Being Earnest",
+    },
+    {
+        authors: "not found",
+        books: "not found",
+    },
 
-//         case "3":
-//             books = "Oliver Twist, A Christmas Carol";
-//             break;
+];
 
-//         case "4":
-//             books = "The Picture of Dorian Gray, The Importance of Being Earnest";
-//             break;
-
-//         default:
-//             books = "not found"
-//             break;
-//     }
-
-//     res.json({
-//         books: books,
-//     });
+// res.json({
+//     authors = authors,
+//     books: books,
 // });
 
-// app.get('/authors/:id/books/', (req, res) => {
-//     var authors = req.params.number;
-//     var books = "";
-    
-//     switch (authors) {
 
-//         case "1":
-//             books = "Beowulf";
-//             break;
+app.get('/authors/:id/', (req, res) => {
 
-//         case "2":
-//             books = "Hamlet, Othello, Romeo and Juliet, MacBeth";
-//             break;
+    var
 
-//         case "3":
-//             books = "Oliver Twist, A Christmas Carol";
-//             break;
-
-//         case "4":
-//             books = "The Picture of Dorian Gray, The Importance of Being Earnest";
-//             break;
-
-//         default:
-//             books = "not found"
-//             break;
-//     }
-
-//     res.json({
-//         books: books,
-//     });
-// });
-
-// app.listen(port, function () {
-//     console.log('Serveur lancé et en écoute dans le port: ' + port);
-// });
+    app.listen(port, function () {
+        console.log('Serveur lancé et en écoute dans le port: ' + port);
+    });
 
