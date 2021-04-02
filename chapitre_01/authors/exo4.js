@@ -4,45 +4,78 @@ var port = 8000;
 
 // EXERCICE 4
 
+app.get('/authors/:id', (req, res) => {
+    var authors = req.params.id;
+    var name = "";
+    var nationality = "";
 
-var authors = "";
-var books = "";
+    switch (authors) {
 
-var allInfo = [
-    {
-        authors: "Lawrence Nowell , UK",
-        books: "Beowulf",
-    },
-    {
-        authors: "William Shakespeare , UK",
-        books: "Hamlet, Othello, Romeo and Juliet, MacBeth",
-    },
-    {
-        authors: "Charles Dickens , US",
-        books: "Oliver Twist, A Christmas Carol",
-    },
-    {
-        authors: "Oscar Wilde , UK",
-        books: "The Picture of Dorian Gray, The Importance of Being Earnest",
-    },
-    {
-        authors: "not found",
-        books: "not found",
-    },
+        case "1":
+            name = "Lawrence Nowell";
+            nationality = "UK";
+            break;
 
-];
+        case "2":
+            name = "William Shakespeare";
+            nationality = "UK";
+            break;
 
-// res.json({
-//     authors = authors,
-//     books: books,
-// });
+        case "3":
+            name = "Charles Dickens";
+            nationality = "US";
+            break;
 
+        case "4":
+            name = "Oscar Wilde";
+            nationality = "UK";
+            break;
 
-app.get('/authors/:id/', (req, res) => {
+        default:
+            name = "not found";
+            nationality = "none";
+            break;
+    }
 
-    var
-
-    app.listen(port, function () {
-        console.log('Serveur lancé et en écoute dans le port: ' + port);
+    res.json({
+        name: name,
+        nationality: nationality,
     });
+});
 
+
+app.get('/authors/:number/books/', (req, res) => {
+    var authors = req.params.number;
+    var books = "";
+
+    switch (authors) {
+
+        case "1":
+            books = "Beowulf";
+            break;
+
+        case "2":
+            books = "Hamlet, Othello, Romeo and Juliet, MacBeth";
+            break;
+
+        case "3":
+            books = "Oliver Twist, A Christmas Carol";
+            break;
+
+        case "4":
+            books = "The Picture of Dorian Gray, The Importance of Being Earnest";
+            break;
+
+        default:
+            books = "not found";
+            break;
+    }
+
+    res.json({
+        books: [books],
+    });
+});
+
+app.listen(port, function () {
+    console.log('Serveur lancé et en écoute dans le port: ' + port);
+});

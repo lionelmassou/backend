@@ -12,35 +12,40 @@ app.get('/authors/:id', (req, res) => {
     switch (authors) {
 
         case "1":
-            name = "Lawrence Nowell";
-            country = "UK"
+            res.send('Lawrence Nowell, UK');
+            // name = "Lawrence Nowell";
+            // country = "UK"
             break;
 
         case "2":
-            name = "William Shakespeare";
-            country = "UK"
+            res.send('William Shakespeare, UK');
+            // name = "William Shakespeare";
+            // country = "UK"
             break;
 
         case "3":
-            name = "Charles Dickens";
-            country = "US"
+            res.send('Charles Dickens, US');
+            // name = "Charles Dickens";
+            // country = "US"
             break;
 
         case "4":
-            name = "Oscar Wilde";
-            country = "UK"
+            res.send('Oscar Wilde, UK');
+            // name = "Oscar Wilde";
+            // country = "UK"
             break;
 
         default:
-            name = "not found"
-            country = "none"
+            res.send('not found, none');
+            // name = "not found"
+            // country = "none"
             break;
     }
 
-    res.json({
-        name: name,
-        country: country,
-    });
+    // res.json({
+    //     name: name,
+    //     country: country,
+    // });
 });
 
 app.listen(port, function () {

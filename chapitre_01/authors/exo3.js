@@ -11,29 +11,34 @@ app.get('/authors/:number/books/', (req, res) => {
     switch (authors) {
 
         case "1":
-            books = "Beowulf";
+            res.send("Beowulf");
+            // books = "Beowulf";
             break;
 
         case "2":
-            books = "Hamlet, Othello, Romeo and Juliet, MacBeth";
+            res.send("Hamlet, Othello, Romeo and Juliet, MacBeth");
+            // books = "Hamlet, Othello, Romeo and Juliet, MacBeth";
             break;
 
         case "3":
-            books = "Oliver Twist, A Christmas Carol";
+            res.send("Oliver Twist, A Christmas Carol");
+            // books = "Oliver Twist, A Christmas Carol";
             break;
 
         case "4":
-            books = "The Picture of Dorian Gray, The Importance of Being Earnest";
+            res.send("The Picture of Dorian Gray, The Importance of Being Earnest");
+            // books = "The Picture of Dorian Gray, The Importance of Being Earnest";
             break;
 
         default:
-            books = "not found"
+            res.send("not found");
+            // books = "not found"
             break;
     }
 
-    res.json({
-        books: books,
-    });
+    // res.json({
+    //     books: books,
+    // });
 });
 
 app.listen(port, function () {
