@@ -15,7 +15,8 @@ request.get(
         // Methode 1
         var newResult = result.reverse();
         console.log("newResult :", newResult);
-        return newResult;
+        // return newResult;
+
         // Methode 2 Fonctionne
 
         // var newResult = [];
