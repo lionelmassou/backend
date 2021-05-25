@@ -14,7 +14,7 @@ app.get("/", function (req, res) {
         movies
     })  
     // console.log("movies2", movies);
-})
+})  
 
 app.get("/:title",function (req,res) {
 
