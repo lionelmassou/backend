@@ -41,13 +41,22 @@ app.get('/PopularBattle', function (req, res) {
 
 app.get('/Favorites/:id', (req, res) => {
 
-    url = "http://api.themoviedb.org/3/movie/${id}?api_key=e441f8a3a151d588a4932d2c5d310769"
+    let id = parseInt(req.params.id);
 
-    let id = req.params.id;
+    const movieId = popularMovies.find(elem => {
+        console.log("find a movie", elem.id)
+        return elem.id === id
+    })
 
-    res.json({
-        // message: `Hello ${id}!`,
-    });
+    if (movieId) {
+        return res.json(movieId);
+    }
+    else{
+        res.json({
+           errorMessage: "erreur, mauvaise id"
+        })
+
+    }
 });
 
 
