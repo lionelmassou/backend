@@ -112,7 +112,9 @@ app.delete('/heroes/:name', (req, res) => {
     const name = (req.params.name)
 
     const infoHero = superHeros.find(elem => {
-        return elem.name.toLowerCase() === name.toLowerCase()
+        if(elem.name.toLowerCase() === name.toLowerCase()){
+            infoHero.pop()
+        }
     })
 
     res.json({
@@ -120,7 +122,6 @@ app.delete('/heroes/:name', (req, res) => {
         infoHero
     });
 
-    // res.send("DELETE Request Called")
   })
 
 app.get('*', (req, res) => {
