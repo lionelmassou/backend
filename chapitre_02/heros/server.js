@@ -74,8 +74,16 @@ app.get("/heroes/:name/powers", (req, res) => {
 app.post("/heroes", transformName, (req, res) => {
 
     const newHero = req.body
-    
-        superHeros.push(newHero)
+
+    // const arrayOfHeroes = superHeros.map(elem => {
+
+    //     if (newHero.name.toLowerCase() === elem.name.toLowerCase()) {
+    //         return superHeros.push(newHero)
+    //     } else {
+    //         console.log("The name is already in the list")
+    //     }
+
+    superHeros.push(newHero)
 
     res.json({
         message: "Ok, hero ajouté"
@@ -85,21 +93,35 @@ app.post("/heroes", transformName, (req, res) => {
 app.post("/heroes/:name/powers", (req, res) => {
 
     const nameHero = req.params.name
-    const powers = req.body
+
+    const power = req.body.power
 
     const infoHero = superHeros.find(elem => {
         if (elem.name.toLowerCase() === nameHero.toLowerCase()) {
-            return elem.name.push(powers)
+            return elem.power.push(power)
         }
     })
-
-    superHeros.push(newHero)
 
     res.json({
         message: "Pouvoir ajouté"
     })
 });
 
+app.delete('/heroes/:name', (req, res) => {
+
+    const name = (req.params.name)
+
+    const infoHero = superHeros.find(elem => {
+        return elem.name.toLowerCase() === name.toLowerCase()
+    })
+
+    res.json({
+        // infoHero : infoHero
+        infoHero
+    });
+
+    // res.send("DELETE Request Called")
+  })
 
 app.get('*', (req, res) => {
     res.json({
