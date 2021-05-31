@@ -10,19 +10,29 @@ const port = 8000;
 
 const debug = (req, rest, next) => {
     console.log("I received a request at ", new Date().toTimeString());
+    next()
 }
 
 app.use(cors())
 
 app.use(express.json()) // permet de recevoir body json dans les requetes
 
-app.use((req, res, next) => {
-    // const dataHero = req.body
-    //     console.log("dataHero c'est quoi? ", dataHero);
+//
+// // FONCTIONNE MAIS PAS LA BONNE SYNTHAXE
+// app.use((req, res, next) => {
+//     // const dataHero = req.body
+//     //     console.log("dataHero c'est quoi? ", dataHero);
 
-    debug()
-    next();
-});
+//     debug()
+//     next();
+// });
+// //
+
+// SOLUTION 
+//
+app.use(debug)
+//
+
 
 const transformName = (req, res, next) => {
 
@@ -75,14 +85,6 @@ app.post("/heroes", transformName, (req, res) => {
 
     const newHero = req.body
 
-    // const arrayOfHeroes = superHeros.map(elem => {
-
-    //     if (newHero.name.toLowerCase() === elem.name.toLowerCase()) {
-    //         return superHeros.push(newHero)
-    //     } else {
-    //         console.log("The name is already in the list")
-    //     }
-
     superHeros.push(newHero)
 
     res.json({
@@ -109,20 +111,44 @@ app.post("/heroes/:name/powers", (req, res) => {
 
 app.delete('/heroes/:name', (req, res) => {
 
-    const name = (req.params.name)
+    console.log("voyons ce que j'affiche: ", req.params.name);
+
+    const name = req.params.name
+
+
+    // Fonctionne mais c'est pas le bon cheminement  
+
+    // const infoHero = superHeros.find(elem => {
+    //     if (elem.name.toLowerCase() === name.toLowerCase()) {
+    //         return superHeros.pop(name)
+    //     }
+    // })
 
     const infoHero = superHeros.find(elem => {
-        if(elem.name.toLowerCase() === name.toLowerCase()){
-            infoHero.pop()
+        if (elem.name.toLowerCase() === name.toLowerCase()) {
+            return name
         }
     })
+    if (name) {
+        superHeros.pop(name)
+    }
 
     res.json({
-        // infoHero : infoHero
-        infoHero
-    });
+        message: `le Heros ${name} a été surpprimé`
+    })
+})
 
-  })
+app.put("/heroes", (req, res) => {
+
+    const newHero = req.body
+
+    superHeros.push(newHero)
+
+    res.json({
+        message: "Ok, hero ajouté"
+    })
+});
+
 
 app.get('*', (req, res) => {
     res.json({
