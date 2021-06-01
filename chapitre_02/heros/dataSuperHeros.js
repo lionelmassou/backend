@@ -1,4 +1,4 @@
-superHeros = [
+const superHeros = [
     {
         name: "Iron Man",
         power: ["money"],

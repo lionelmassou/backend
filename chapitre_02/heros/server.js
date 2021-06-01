@@ -36,7 +36,11 @@ app.use(debug)
 
 const transformName = (req, res, next) => {
 
-    if (req.body.name) {
+    if (req.body.name = undefined) {
+        res.json({
+            errorMessage: "to add a hero, send at least his name"
+        })
+    } else {
         req.body.name = req.body.name.toLowerCase()
     }
     next()
@@ -60,10 +64,16 @@ app.get("/heroes/:name", (req, res) => {
         return elem.name.toLowerCase() === name.toLowerCase()
     })
 
-    res.json({
-        // infoHero : infoHero
-        infoHero
-    });
+    if (name) {
+        res.json({
+            // infoHero : infoHero
+            infoHero
+        });
+    } else {
+        res.json({
+            message: "error tu t'es loupé quelque part"
+        })
+    }
 })
 
 app.get("/heroes/:name/powers", (req, res) => {
@@ -74,9 +84,7 @@ app.get("/heroes/:name/powers", (req, res) => {
         return elem.name.toLowerCase() === name.toLowerCase()
     })
 
-
     res.json({
-
         powerHero: infoHero.power
     });
 })
@@ -99,56 +107,95 @@ app.post("/heroes/:name/powers", (req, res) => {
     const power = req.body.power
 
     const infoHero = superHeros.find(elem => {
-        if (elem.name.toLowerCase() === nameHero.toLowerCase()) {
-            return elem.power.push(power)
-        }
+        return elem.name.toLowerCase() === nameHero.toLowerCase()
     })
 
-    res.json({
-        message: "Pouvoir ajouté"
-    })
+    if (nameHero) {
+        infoHero.power.push(power)
+        res.json({
+            message: "Pouvoir ajouté"
+        })
+    } else {
+        res.json({
+            message: "error tu t'es loupé quelque part"
+        })
+    }
 });
 
 app.delete('/heroes/:name', (req, res) => {
 
-    console.log("voyons ce que j'affiche: ", req.params.name);
+    // console.log("voyons ce que j'affiche: ", req.params.name);
 
     const name = req.params.name
+    // let id = 0
 
+    const infoHero = superHeros.find((elem, id) => {
+        if (elem.name.toLowerCase() === name.toLowerCase()) {
+            return id
+        }
+    })
 
-    // Fonctionne mais c'est pas le bon cheminement  
+    console.log("id: ", infoHero);
 
-    // const infoHero = superHeros.find(elem => {
-    //     if (elem.name.toLowerCase() === name.toLowerCase()) {
-    //         return superHeros.pop(name)
-    //     }
-    // })
+    if (name) {
+        superHeros.slice(infoHero, 1)
+        res.json({
+            message: `le Heros ${name} a été surpprimé`
+        })
+    } else {
+        res.json({
+            message: `le Heros ${name} n'est pas dans la liste`
+        })
+    }
+
+})
+
+app.delete("/heroes/:name/power/:power", (req, res) => {
+
+    const name = req.params.name
+    const power = req.params.power
+
+    const infoHero = superHeros.find(elem => {
+        if (elem.name.toLowerCase() === name.toLowerCase()) {
+            return elem.power === power
+
+        } else {
+            res.json({
+                message: "the power doesn't exist"
+            })
+        }
+    })
+    if (power) {
+        //ici on doit supprimer un pouvoir spécifique
+        res.json({
+            message: `le pouvoir ${power} a bien été retiré du héros ${name}`
+        })
+    }
+
+})
+
+app.put("/heroes/:name", (req, res) => {
+
+    const name = req.params.name
+    const changeHero = req.body
 
     const infoHero = superHeros.find(elem => {
         if (elem.name.toLowerCase() === name.toLowerCase()) {
             return name
         }
     })
+
     if (name) {
-        superHeros.pop(name)
+        infoHero.name = changeHero.name
+        res.json({
+            message: `le nom de ${name} a été modifié par ${changeHero.name}`
+        })
+    } else {
+        res.json({
+            message: `le Heros ${name} n'est pas dans la liste`
+        })
     }
-
-    res.json({
-        message: `le Heros ${name} a été surpprimé`
-    })
-})
-
-app.put("/heroes", (req, res) => {
-
-    const newHero = req.body
-
-    superHeros.push(newHero)
-
-    res.json({
-        message: "Ok, hero ajouté"
-    })
 });
-
 
 app.get('*', (req, res) => {
     res.json({
