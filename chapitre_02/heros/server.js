@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
 
-const { superHeros } = require("./dataSuperHeros.js")
-
+let { superHeros } = require("./dataSuperHeros.js")
 
 var cors = require('cors');
 const { request } = require('express');
@@ -17,22 +16,7 @@ app.use(cors())
 
 app.use(express.json()) // permet de recevoir body json dans les requetes
 
-//
-// // FONCTIONNE MAIS PAS LA BONNE SYNTHAXE
-// app.use((req, res, next) => {
-//     // const dataHero = req.body
-//     //     console.log("dataHero c'est quoi? ", dataHero);
-
-//     debug()
-//     next();
-// });
-// //
-
-// SOLUTION 
-//
 app.use(debug)
-//
-
 
 const transformName = (req, res, next) => {
 
@@ -93,11 +77,21 @@ app.post("/heroes", transformName, (req, res) => {
 
     const newHero = req.body
 
-    superHeros.push(newHero)
-
-    res.json({
-        message: "Ok, hero ajouté"
+    const infoHero = superHeros.find(elem => {
+        return elem.name.toLowerCase() === nameHero.toLowerCase()
     })
+
+    if (infoHero) {
+        res.json({
+            errorMessage: "the hero is already in the list"
+        })
+    } else {
+        superHeros.push(newHero)
+
+        res.json({
+            message: "Ok, hero ajouté"
+        })
+    }
 });
 
 app.post("/heroes/:name/powers", (req, res) => {
@@ -122,56 +116,96 @@ app.post("/heroes/:name/powers", (req, res) => {
     }
 });
 
-app.delete('/heroes/:name', (req, res) => {
-
-    // console.log("voyons ce que j'affiche: ", req.params.name);
+app.delete('/heroes/:name', (req, res, next) => {
 
     const name = req.params.name
-    // let id = 0
-
-    const infoHero = superHeros.find((elem, id) => {
-        if (elem.name.toLowerCase() === name.toLowerCase()) {
-            return id
-        }
-    })
-
-    console.log("id: ", infoHero);
-
-    if (name) {
-        superHeros.slice(infoHero, 1)
-        res.json({
-            message: `le Heros ${name} a été surpprimé`
-        })
-    } else {
-        res.json({
-            message: `le Heros ${name} n'est pas dans la liste`
-        })
-    }
-
-})
-
-app.delete("/heroes/:name/power/:power", (req, res) => {
-
-    const name = req.params.name
-    const power = req.params.power
 
     const infoHero = superHeros.find(elem => {
-        if (elem.name.toLowerCase() === name.toLowerCase()) {
-            return elem.power === power
-
-        } else {
-            res.json({
-                message: "the power doesn't exist"
-            })
-        }
+        return elem.name.toLowerCase() === name.toLowerCase()
     })
-    if (power) {
-        //ici on doit supprimer un pouvoir spécifique
+
+    if (infoHero) {
+        next()
+    } else {
+        res.json({
+            errorMessage: "the hero is not in the list"
+        })
+    }
+}, (req, res) => {
+    const name = req.params.name
+
+    // METHODE AVEC FILTER//
+
+    // const newSuperHeros = superHeros.filter(elem => {
+    //     return elem.name.toLocaleLowerCase() !== name.toLocaleLowerCase()
+    // })
+
+    // superHeros = newSuperHeros
+
+    // ou 
+
+    // superHeros = superHeros.filter(elem => {
+    //     return elem.name.toLocaleLowerCase() !== name.toLocaleLowerCase()
+    // })
+
+    // METHODE AVEC SPLICE//
+
+    // const newSuperHeros = superHeros.find((elem,index) => {
+    //     return elem.name.toLocaleLowerCase() !== name.toLocaleLowerCase()
+    // })
+
+    // superHeros = newSuperHeros
+
+    for (let i = 0; i < superHeros.length; i++) {
+        if (superHeros[i].name.toLocaleLowerCase() === name.toLocaleLowerCase()) {
+            superHeros.splice(i, 1)
+        }
+    }
+
+    res.json({
+        errorMessage: `the heros ${name} is deleted`
+    })
+})
+
+app.delete("/heroes/:name/power/:power", (req, res, next) => {
+
+    const name = req.params.name
+
+    const infoHero = superHeros.find(elem => {
+        return elem.name.toLowerCase() === name.toLowerCase()
+    })
+
+    if (infoHero) {
+        next()
+    } else {
+        res.json({
+            errorMessage: "the hero is not in the list"
+        })
+    }
+}, (req, res) => {
+
+    const name = req.params.name.toLocaleLowerCase()
+    const power = req.params.power.toLocaleLowerCase()
+
+    const infoHero = superHeros.find(elem => {
+        return elem.name.toLowerCase() === name
+    })
+
+    const indexPower = infoHero.power.findIndex(elem => {
+        return elem = power
+    })
+
+    if (power > -1) {
+
+        selectedHeros.splice(indexPower, 1)
         res.json({
             message: `le pouvoir ${power} a bien été retiré du héros ${name}`
         })
+    } else {
+        res.json({
+            message: `the power ${power} doesn't exist for ${name}`
+        })
     }
-
 })
 
 app.put("/heroes/:name", (req, res) => {
@@ -186,7 +220,7 @@ app.put("/heroes/:name", (req, res) => {
     })
 
     if (name) {
-        infoHero.name = changeHero.name
+        infoHero = changeHero
         res.json({
             message: `le nom de ${name} a été modifié par ${changeHero.name}`
         })
@@ -196,6 +230,8 @@ app.put("/heroes/:name", (req, res) => {
         })
     }
 });
+
+
 
 app.get('*', (req, res) => {
     res.json({

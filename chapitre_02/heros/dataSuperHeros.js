@@ -1,4 +1,4 @@
-const superHeros = [
+let superHeros = [
     {
         name: "Iron Man",
         power: ["money"],
