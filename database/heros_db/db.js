@@ -9,24 +9,29 @@ const port = 8000;
 
 app.use(cors())
 app.use(express.json())
+
+const debug = (req, rest, next) => {
+    console.log("I received a request at ", new Date().toTimeString());
+    next()
+}
 app.use(debug)
 
-// const debug = (req, rest, next) => {
-//     console.log("I received a request at ", new Date().toTimeString());
-//     next()
-// }
+const transformName = (req, res, next) => {
 
-// const transformName = (req, res, next) => {
+    if (req.body.name = undefined) {
+        res.json({
+            errorMessage: "to add a hero, send at least his name"
+        })
+    } else {
+        req.body.name = req.body.name.toLowerCase()
+    }
+    next()
+}
 
-//     if (req.body.name = undefined) {
-//         res.json({
-//             errorMessage: "to add a hero, send at least his name"
-//         })
-//     } else {
-//         req.body.name = req.body.name.toLowerCase()
-//     }
-//     next()
-// }
+// ça drop le database mais la laisse vide pour le test d'apres
+// mongoose.connect("mongodb://localhost:27017/heros", (err) => {
+//     mongoose.connection.db.dropDatabase()
+// })
 
 mongoose.connect("mongodb://localhost:27017/heros", (err) => {
     if (err) {
@@ -48,82 +53,112 @@ const herosSchema = mongoose.Schema({
 
 const Heros = mongoose.model('Heros', herosSchema)
 
-const firstHeros = new Heros(
-    {
-        name: "Iron Man",
-        power: ["money"],
-        color: "red",
-        isAlive: true,
-        age: 46,
-        image: "https://blog.fr.playstation.com/tachyon/sites/10/2019/07/unnamed-file-18.jpg?resize=1088,500&crop_strategy=smart"
-    }
-)
-const secondHeros = new Heros(
-    {
-        name: "Thor",
-        power: ["electricty", "worthy"],
-        color: "blue",
-        isAlive: true,
-        age: 300,
-        image: "https://www.bdfugue.com/media/catalog/product/cache/1/image/400x/17f82f742ffe127f42dca9de82fb58b1/9/7/9782809465761_1_75.jpg"
-    }
-)
-const thirdHeros = new Heros(
-    {
-        name: "Daredevil",
-        power: ["blind"],
-        color: "red",
-        isAlive: false,
-        age: 30,
-        image: "https://aws.vdkimg.com/film/2/5/1/1/251170_backdrop_scale_1280xauto.jpg"
-    }
-)
+// const firstHeros = new Heros(
+//     {
+//         name: "Iron Man",
+//         power: ["money"],
+//         color: "red",
+//         isAlive: true,
+//         age: 46,
+//         image: "https://blog.fr.playstation.com/tachyon/sites/10/2019/07/unnamed-file-18.jpg?resize=1088,500&crop_strategy=smart"
+//     }
+// )
+// const secondHeros = new Heros(
+//     {
+//         name: "Thor",
+//         power: ["electricty", "worthy"],
+//         color: "blue",
+//         isAlive: true,
+//         age: 300,
+//         image: "https://www.bdfugue.com/media/catalog/product/cache/1/image/400x/17f82f742ffe127f42dca9de82fb58b1/9/7/9782809465761_1_75.jpg"
+//     }
+// )
+// const thirdHeros = new Heros(
+//     {
+//         name: "Daredevil",
+//         power: ["blind"],
+//         color: "red",
+//         isAlive: false,
+//         age: 30,
+//         image: "https://aws.vdkimg.com/film/2/5/1/1/251170_backdrop_scale_1280xauto.jpg"
+//     }
+// )
 
-firstHeros.save((err, data) => {
-    if (err) {
-        console.log("something isn't good with your instructions");
-        console.log(err);
-    } else {
-        console.log(`Succes... There is a ${data.name} in your Hero list`);
-    }
-})
-secondHeros.save((err, data) => {
-    if (err) {
-        console.log("something isn't good with your instructions");
-        console.log(err);
-    } else {
-        console.log(`Succes... There is a ${data.name} in your Hero list`);
-    }
-})
-thirdHeros.save((err, data) => {
-    if (err) {
-        console.log("something isn't good with your instructions");
-        console.log(err);
-    } else {
-        console.log(`Succes... There is a ${data.name} in your Hero list`);
-    }
-})
+// firstHeros.save((err, data) => {
+//     if (err) {
+//         console.log("something isn't good with your instructions");
+//         console.log(err);
+//     } else {
+//         console.log(`Succes... There is a ${data.name} in your Hero list`);
+//     }
+// })
+// secondHeros.save((err, data) => {
+//     if (err) {
+//         console.log("something isn't good with your instructions");
+//         console.log(err);
+//     } else {
+//         console.log(`Succes... There is a ${data.name} in your Hero list`);
+//     }
+// })
+// thirdHeros.save((err, data) => {
+//     if (err) {
+//         console.log("something isn't good with your instructions");
+//         console.log(err);
+//     } else {
+//         console.log(`Succes... There is a ${data.name} in your Hero list`);
+//     }
+// })
 
 // A modifier
 
-// app.get("/heroes", (req, res) => {
-//     res.json(superHeros)
-// })
+app.get("/heroes", async (req, res) => {
 
-// app.get("/heroes/:name", (req, res) => {
-//     const nameHero = req.params.name.toLowerCase()
+    // console.log("Heros ", Heros)
+    // console.log("req ", req)
+    // console.log("res ", res)
 
-//     for (var i = 0; i < superHeros.length; i++) {
+    try {
+        const heros = await Heros.find().exec()
+        console.log("heros ", heros)
 
-//         if (superHeros[i].name.toLowerCase() === nameHero) {
-//             res.json(superHeros[i])
-//         }
-//     }
+        res.json(heros)
 
-//     res.json({
-//         message: "Hero not found"
-//     })
-// })
+    } catch (error) {
+        console.error("Error in GET /heroes", error)
+        res.json({
+            message: "Error when finding heroes :("
+        })
+    }
+})
+
+app.get("/heroes/:name", async (req, res) => {
+
+    const nameHero = req.params.name.toLowerCase()
+
+    try {
+        const heros = await Heros.find().exec()
+        // const nameHero = await heros.find(req.params.name.toLowerCase()).exec()
+
+        for (var i = 0; i < heros.length; i++) {
+
+            if (heros[i].name.toLowerCase() === nameHero) {
+                res.json(heros[i])
+            } else {
+                res.json({
+                    message: `Hero ${nameHero} not found`
+                })
+                console.log(`Hero ${nameHero} not found`);
+            }
+        }
+
+    } catch (error) {
+        console.error("Error in GET /heroes/:name", error)
+
+        res.json({
+            message: `Error when finding heroes :(`
+        })
+    }
+})
 
 // app.get("/heroes/:name/powers", (req, res) => {
 //     const nameHero = req.params.name.toLowerCase()
@@ -151,18 +186,29 @@ thirdHeros.save((err, data) => {
 
 // }
 
-// app.post("/heroes", transformName, (req, res) => {
-//     // console.log(req.body);
+app.post("/heroes", transformName, async (req, res) => {
+    // console.log(req.body);
+    try {
+        const heros = await Heros.find().exec()
 
-//     const hero = req.body
+        const hero = req.body
 
-//     superHeros.push(hero)
+        await heros.push(hero)
 
-//     res.json({
-//         message: "Ok, héros ajouté",
-//         hero
-//     })
-// })
+        res.json({
+            message: "Ok, héros ajouté",
+            hero
+        })
+
+    } catch (error) {
+        console.error("Error in POST /students", error)
+
+        res.json({
+            message: "The student was not saved :("
+        })
+    }
+
+})
 
 // app.post("/heroes/:name/powers", (req, res) => {
 //     const nameHero = req.params.name.toLowerCase()

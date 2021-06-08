@@ -1,6 +1,6 @@
 // ETAPE 1
 
-const mongoose = require ('mongoose')
+const mongoose = require('mongoose')
 
 mongoose.connect("mongodb://localhost:27017/garage", (err) => {
     if (err) {
@@ -24,9 +24,20 @@ const Garage = mongoose.model('Garage', garageSchema)
 
 // ETAPE 4
 
-Garage.findById("60be186524dfbf3dabb2357e", (err,carName) => {
-    if(!err){
-        console.log("Voici la voiture que vous recherchez");
-        console.log(carName)
+const findCar = async () => {
+
+    try {
+        const car = await Garage.findById("60be186524dfbf3dabb2357e", (err, carName) => {
+            if (!err) {
+                console.log("Voici la voiture que vous recherchez");
+                console.log(carName)
+            }
+        })
+    } catch (err) {
+        console.error(err)
     }
-})
+}
+
+findCar()
+
+
