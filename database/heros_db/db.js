@@ -16,17 +16,17 @@ const debug = (req, rest, next) => {
 }
 app.use(debug)
 
-const transformName = (req, res, next) => {
+// const transformName = (req, res, next) => {
 
-    if (req.body.name = undefined) {
-        res.json({
-            errorMessage: "to add a hero, send at least his name"
-        })
-    } else {
-        req.body.name = req.body.name.toLowerCase()
-    }
-    next()
-}
+//     if (req.body.name = undefined) {
+//         res.json({
+//             errorMessage: "to add a hero, send at least his name"
+//         })
+//     } else {
+//         req.body.name = req.body.name.toLowerCase()
+//     }
+//     next()
+// }
 
 // ça drop le database mais la laisse vide pour le test d'apres
 // mongoose.connect("mongodb://localhost:27017/heros", (err) => {
@@ -119,7 +119,7 @@ app.get("/heroes", async (req, res) => {
 
     try {
         const heros = await Heros.find().exec()
-        console.log("heros ", heros)
+        console.log(" voilà la liste des heros ", heros)
 
         res.json(heros)
 
@@ -134,6 +134,7 @@ app.get("/heroes", async (req, res) => {
 app.get("/heroes/:name", async (req, res) => {
 
     const nameHero = req.params.name.toLowerCase()
+    let goodHero = {}
 
     try {
         const heros = await Heros.find().exec()
@@ -142,13 +143,21 @@ app.get("/heroes/:name", async (req, res) => {
         for (var i = 0; i < heros.length; i++) {
 
             if (heros[i].name.toLowerCase() === nameHero) {
-                res.json(heros[i])
-            } else {
-                res.json({
-                    message: `Hero ${nameHero} not found`
-                })
-                console.log(`Hero ${nameHero} not found`);
+                goodHero = heros[i]
             }
+        }
+
+        if (Object.keys.goodHero !== -1){
+
+            console.log("goodHero", goodHero);
+    
+            res.json(
+                goodHero
+            )
+        } else {
+            res.json({
+                message: `Error when finding heroes :(`
+            })
         }
 
     } catch (error) {
@@ -186,29 +195,48 @@ app.get("/heroes/:name", async (req, res) => {
 
 // }
 
-app.post("/heroes", transformName, async (req, res) => {
-    // console.log(req.body);
+// app.post("/heroes", transformName, async (req, res) => {
+    app.post("/heroes", async (req, res) => {
+
+    // console.log("what is req.body ", req.body);
+    const hero = req.body
+    let newHero = []
+    
     try {
         const heros = await Heros.find().exec()
-
-        const hero = req.body
-
-        await heros.push(hero)
+        // console.log("let see heros ", heros);
+        
+        newHero = await heros.push(hero)
+        console.log('let see newHero ', newHero);
 
         res.json({
-            message: "Ok, héros ajouté",
-            hero
+            // message: "Ok, héros ajouté",
+            newhero
         })
 
     } catch (error) {
         console.error("Error in POST /students", error)
 
         res.json({
-            message: "The student was not saved :("
+            message: "Didn't Add the Hero :("
         })
     }
 
 })
+
+// Create One Route
+// router.post("/", async (req, res) => {
+//     const user = new User({
+//       firstname: req.body.firstname,
+//       lastname: req.body.lastname
+//     });
+//     try {
+//       const newUser = await user.save();
+//       res.status(201).json({ newUser });
+//     } catch (err) {
+//       res.status(400).json({ message: err.message });
+//     }
+//   });
 
 // app.post("/heroes/:name/powers", (req, res) => {
 //     const nameHero = req.params.name.toLowerCase()
@@ -234,11 +262,11 @@ app.post("/heroes", transformName, async (req, res) => {
 //     }
 // })
 
-// app.get("*", (req, res) => {
-//     res.json({
-//         message: "The route doesn't exist"
-//     })
-// })
+app.get("*", (req, res) => {
+    res.json({
+        message: "The route doesn't exist"
+    }, 404)
+})
 
 app.listen(port, () => {
     console.log("Server is listenin at port ", port);
