@@ -16,18 +16,6 @@ const debug = (req, rest, next) => {
 }
 app.use(debug)
 
-// const transformName = (req, res, next) => {
-
-//     if (req.body.name = undefined) {
-//         res.json({
-//             errorMessage: "to add a hero, send at least his name"
-//         })
-//     } else {
-//         req.body.name = req.body.name.toLowerCase()
-//     }
-//     next()
-// }
-
 // ça drop le database mais la laisse vide pour le test d'apres
 // mongoose.connect("mongodb://localhost:27017/heros", (err) => {
 //     mongoose.connection.db.dropDatabase()
@@ -195,15 +183,27 @@ app.get("/heroes/:name", async (req, res) => {
 
 // }
 
-// app.post("/heroes", transformName, async (req, res) => {
-    app.post("/heroes", async (req, res) => {
+const transformName = (req, res, next) => {
+
+    if (req.body.name = undefined) {
+        res.json({
+            errorMessage: "to add a hero, send at least his name"
+        })
+    } else {
+        req.body.name = req.body.name.toLowerCase()
+    }
+    next()
+}
+
+app.post("/heroes", transformName, async (req, res) => {
+    // app.post("/heroes", async (req, res) => {
 
     // console.log("what is req.body ", req.body);
     const hero = req.body
     let newHero = []
     
     try {
-        const heros = await Heros.find().exec()
+        const heros = await Heros.find(hero.name).exec()
         // console.log("let see heros ", heros);
         
         newHero = await heros.push(hero)
@@ -224,19 +224,6 @@ app.get("/heroes/:name", async (req, res) => {
 
 })
 
-// Create One Route
-// router.post("/", async (req, res) => {
-//     const user = new User({
-//       firstname: req.body.firstname,
-//       lastname: req.body.lastname
-//     });
-//     try {
-//       const newUser = await user.save();
-//       res.status(201).json({ newUser });
-//     } catch (err) {
-//       res.status(400).json({ message: err.message });
-//     }
-//   });
 
 // app.post("/heroes/:name/powers", (req, res) => {
 //     const nameHero = req.params.name.toLowerCase()
