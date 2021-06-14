@@ -38,13 +38,13 @@ app.get("/hotels", async (req, res) => {
     }
 })
 
-const findHotel = async (name) => {
+const findHotel = async (id) => {
     try {
         return await Hotel.findOne({
-            name: {
-                $regex: new RegExp("^" + name, "i")
-            }
-            // _id: id
+            // name: {
+            //     $regex: new RegExp("^" + name, "i")
+            // }
+            _id: id
         })
     } catch (err) {
         console.error(err)
@@ -53,13 +53,13 @@ const findHotel = async (name) => {
     }
 }
 
-const findRestaurant = async (name) => {
+const findRestaurant = async (id) => {
     try {
         return await Restaurant.findOne({
-            name: {
-                $regex: new RegExp("^" + name, "i")
-            }
-            // _id: id
+            // name: {
+            //     $regex: new RegExp("^" + name, "i")
+            // }
+            _id: id
         })
     } catch (err) {
         console.error(err)
@@ -132,11 +132,11 @@ app.post("/hotels",
 
 const continueIfHotelExists = async (req, res, next) => {
     try {
-        const name = req.params.name
+        const id = req.params.id
 
-        const hotelName = await findHotel(name)
+        const hotelId = await findHotel(id)
 
-        if (hotelName) {
+        if (hotelId) {
             next()
         } else {
             res.status(400).json({ errorMessage: "Hotel was not found" })
@@ -151,11 +151,11 @@ const continueIfHotelExists = async (req, res, next) => {
 
 const continueIfRestaurantExists = async (req, res, next) => {
     try {
-        const name = req.params.name
+        const id = req.params.id
 
-        const restaurantName = await findHotel(name)
+        const restaurantId = await findHotel(id)
 
-        if (restaurantName) {
+        if (restaurantId) {
             next()
         } else {
             res.status(400).json({ errorMessage: "Hotel was not found" })
@@ -168,12 +168,16 @@ const continueIfRestaurantExists = async (req, res, next) => {
     }
 }
 
-app.put("/hotels/:id?name=newName", continueIfHotelExists, async (req, res) => {
+app.put("/hotels/:id", continueIfHotelExists, async (req, res) => {
     try {
         const id = req.params.id
-        // const newNameHotel = req.body
+        const newNameHotel = req.body
 
-        await Hotel.replaceOne({ _id: id }).update({ $set: { name: newNameHotel } })
+        await Hotel.replaceOne({_id: id }, { name: newNameHotel }, { new: true })
+        
+        // const restaurant = await Restaurant.findOneAndUpdate({ _id: restaurantId },
+        //     { $set: {name: restaurantQuery.name } },
+        //     { new: true })
 
         res.json({
             message: `The name was replaced!`
@@ -288,7 +292,7 @@ app.put("/restaurants/:id?name=newName", continueIfRestaurantExists, async (req,
         const id = req.params.id
         // const newNameRestaurant = req.body
 
-        await Restaurant.replaceOne({ _id: id }).update({ $set: { name: newNameHotel } })
+        await Restaurant.replaceOne({ _id: id }, { $set: { name: newNameHotel } })
 
         res.json({
             message: `The name was replaced!`
