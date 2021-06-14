@@ -13,7 +13,7 @@ const port = 8052
 
 const app = express();
 
-app.use(cors())
+app.use(cors()) 
 
 app.use(express.static('public'));
 
