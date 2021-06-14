@@ -7,8 +7,6 @@ const path = require("path");
 
 const upload = multer({ dest: 'public/uploads/' });
 
-
-
 const port = 8052
 
 const app = express();
