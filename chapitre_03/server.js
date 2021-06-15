@@ -1,6 +1,6 @@
 const express = require('express');
-const multer = require('multer');
 const cors = require("cors")
+const multer = require('multer');
 // const mongoose = require('mongoose');
 const fs = require("fs");
 const path = require("path");
@@ -12,6 +12,7 @@ const port = 8052
 const app = express();
 
 app.use(cors()) 
+app.use(express.json())
 
 app.use(express.static('public'));
 
