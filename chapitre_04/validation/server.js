@@ -1,6 +1,6 @@
 const express = require("express");
 const expressValidator = require("express-validator");
-const passwordValidator = require('password-validator');
+// const passwordValidator = require('password-validator');
 
 const app = express();
 
@@ -11,10 +11,10 @@ app.get("/", (req, res) => {
 })
 
 app.post('/users/add',
-    expressValidator.body("username").isLength({ min: 4 }),
-    expressValidator.body("mail").isEmail(),
-    expressValidator.body("age").isNumeric(),
-    // expressValidator.body("city").isArray
+    expressValidator.body("username").exists().isLength({ min: 4 }),
+    expressValidator.body("mail").exists().isEmail(),
+    expressValidator.body("age").exists().isNumeric(),
+    expressValidator.body("city").isIn(['Paris', 'Tokyo', 'Los Angeles']),
     // expressValidator.body("password").custom((value) => {
     //     var schema = new passwordValidator();
     //     schema
@@ -28,10 +28,11 @@ app.post('/users/add',
     //     return schema.validate(value);
     // }),
     (req, res) => {
-        const errors = validationResult(req);
+        const errors = expressValidator.validationResult(req);
         if (errors.isEmpty() === false) {
-            res.json({
-                errors: errors.array() // to be used in a json loop
+            res.status(400).json({
+                errors: errors.array(), // to be used in a json loop
+                message: 'there is a problem'
             });
             return;
         } else {
@@ -43,9 +44,6 @@ app.post('/users/add',
     }
 );
 
-
-
-
 app.listen(8000, () => {
-    console.log('Server started');
+  console.log('Server started');
 });
