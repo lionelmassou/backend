@@ -8,18 +8,6 @@ const userValidationAndAdd = async (req, res) => {
             expressValidator.body("mail").exists().isEmail(),
             expressValidator.body("age").exists().isNumeric({ min: 0, max: 99 }).isLength({ max: 2 }),
             expressValidator.body("city").isIn(['Paris', 'Tokyo', 'Los Angeles']),
-            // expressValidator.body("password").custom((value) => {
-            //     var schema = new passwordValidator();
-            //     schema
-            //         .is().min(8) // Minimum length 8
-            //         .is().max(100) // Maximum length 100
-            //         .has().uppercase() // Must have uppercase letters
-            //         .has().lowercase() // Must have lowercase letters
-            //         .has().digits(2) // Must have at least 2 digits
-            //         .has().not().spaces() // Should not have spaces
-            //         .is().not().oneOf(["Passw0rd", "Password123"]);
-            //     return schema.validate(value);
-            // }),
             (req, res) => {
                 const errors = expressValidator.validationResult(req);
                 if (errors.isEmpty() === false) {
@@ -49,4 +37,35 @@ const userValidationAndAdd = async (req, res) => {
     }
 }
 
-module.exports = { userValidationAndAdd }
+const getAllUser = async (req, res) => {
+    // const users = []
+
+    try {
+        const users = await User.find({})
+
+        res.json(users)
+    } catch (err) {
+        console.error(err)
+
+        res.json({ errorMessage: "There was a probleme :(" }, 500)
+    }
+}
+
+const getUsername = async (req, res) => {
+    try {
+
+        const userGet = req.params
+        console.log(req.params);
+        console.log(req.params.username);
+
+        const users = await User.find(userGet)
+
+        res.json(users)
+    } catch (err) {
+        console.error(err)
+
+        res.json({ errorMessage: "There was a probleme :(" }, 500)
+    }
+}
+
+module.exports = { userValidationAndAdd, getAllUser, getUsername }
