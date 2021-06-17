@@ -1,10 +1,10 @@
 const mongoose = require("mongoose")
 
 const userSchema = mongoose.Schema({
-    username: String,
-    email: String,
-    age: Number,
-    city: String,
+    username: { type: String, require:true},
+    email: { type: String, require:true},
+    age: { type: Number, require:true},
+    city: { type: String, require:true},
     date: { type: Date, default: Date.now }
 })
 
