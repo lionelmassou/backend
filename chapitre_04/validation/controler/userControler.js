@@ -66,29 +66,60 @@ const getUsername = async (req, res) => {
     }
 }
 
+
 const getUserEmail = async (req, res) => {
     try {
 
+        // let userByMail = []
+        console.log("c'est quoi rep.params: ", req.params);
+        console.log("c'est quoi req.params.email: ", req.params.email);
+
         const userEmail = req.params.email
 
-        console.log("c'est quoi userEmail: ", userEmail);
-
-        const getUser = await UserModel.findById(userEmail).lean()
+        const getUser = await UserModel.find(userEmail)
         res.json({
             message: "the request is done",
+            // userByMail: getUser
             getUser
         })
 
     } catch (err) {
         console.error(err)
 
-        res.status(500).json({ message: "There was a problem", error })
+        res.status(500).json({ message: "There was a problem", err })
     }
 }
 
+// const getUserEmail = async (req, res) => {
+
+//     console.log("c'est quoi rep.params: ", req.params);
+//     console.log("c'est quoi req.params.email: ", req.params.email);
+
+//     const userEmail = req.params
+//     try {
+
+//         // let userByMail = []
+
+//                const getUser = await UserModel.find(userEmail)
+
+//                console.log("getUser c'est quoi: ", getUser);
+
+//         res.json({
+//             message: "the request is done",
+//             // userByMail: getUser
+//             getUser
+//         })
+
+//     } catch (err) {
+//         console.error(err)
+
+//         res.status(500).json({ message: "There was a problem", err })
+//     }
+// }
+
 const getUserById = async (req, res) => {
+    const userId = req.params.id
     try {
-        const userId = req.params.id
 
         console.log("c'est quoi userId: ", userId);
 
