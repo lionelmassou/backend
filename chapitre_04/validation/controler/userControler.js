@@ -74,9 +74,12 @@ const getUserEmail = async (req, res) => {
         console.log("c'est quoi rep.params: ", req.params);
         console.log("c'est quoi req.params.email: ", req.params.email);
 
-        const userEmail = req.params.email
+        const userEmail = req.params
 
         const getUser = await UserModel.find(userEmail)
+
+        console.log("getUser c'est quoi: ", getUser);
+        
         res.json({
             message: "the request is done",
             // userByMail: getUser
