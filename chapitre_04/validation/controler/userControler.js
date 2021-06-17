@@ -19,11 +19,12 @@ const userAddAfterValidation = async (req, res) => {
             const user = req.body
             console.log("what is user: ", user)
 
-            const newUser = await UserModel.create(user)
+            const newUser = await UserModel.create(user).lean()
 
             res.json({
                 success: true,
-                message: 'User will be saved'
+                message: 'User will be saved',
+                newUser
 
             });
         }
@@ -39,7 +40,7 @@ const getAllUser = async (req, res) => {
     // const users = []
 
     try {
-        const users = await UserModel.find({})
+        const users = await UserModel.find({}).lean()
 
         res.json(users)
     } catch (err) {
@@ -56,7 +57,7 @@ const getUsername = async (req, res) => {
         // console.log(req.params);
         // console.log(req.params.username);
 
-        const users = await UserModel.find(userGet)
+        const users = await UserModel.find(userGet).lean()
 
         res.json(users)
     } catch (err) {
@@ -74,9 +75,9 @@ const getUserEmail = async (req, res) => {
         console.log("c'est quoi rep.params: ", req.params);
         console.log("c'est quoi req.params.email: ", req.params.email);
 
-        const userEmail = req.params
+        const userEmail = req.params.email
 
-        const getUser = await UserModel.find(userEmail)
+        const getUser = await UserModel.find({email: userEmail}).lean()
 
         console.log("getUser c'est quoi: ", getUser);
         
@@ -93,32 +94,6 @@ const getUserEmail = async (req, res) => {
     }
 }
 
-// const getUserEmail = async (req, res) => {
-
-//     console.log("c'est quoi rep.params: ", req.params);
-//     console.log("c'est quoi req.params.email: ", req.params.email);
-
-//     const userEmail = req.params
-//     try {
-
-//         // let userByMail = []
-
-//                const getUser = await UserModel.find(userEmail)
-
-//                console.log("getUser c'est quoi: ", getUser);
-
-//         res.json({
-//             message: "the request is done",
-//             // userByMail: getUser
-//             getUser
-//         })
-
-//     } catch (err) {
-//         console.error(err)
-
-//         res.status(500).json({ message: "There was a problem", err })
-//     }
-// }
 
 const getUserById = async (req, res) => {
     const userId = req.params.id
