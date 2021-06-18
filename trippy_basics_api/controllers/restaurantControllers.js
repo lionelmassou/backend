@@ -15,6 +15,7 @@ const getRestaurant = async (req, res) => {
         const idRestaurant = req.params.id
 
         const restaurant = await restaurantModel.findById(idRestaurant).lean()
+        // const restaurant = await restaurantModel.findById(idRestaurant).populate("tables").lean()
         res.json(restaurant)
     } catch (error) {
         res.status(500).json({ message: "There was a problem", error })
@@ -39,7 +40,7 @@ const addRestaurant = async (req, res) => {
 const changeRestaurantName = async (req, res) => {
     try {
         const id = req.params.id
-        const newNameRestaurant = req.body
+        const newNameRestaurant = req.body.name
 
         await restaurantModel.findByIdAndUpdate(id, { name: newNameRestaurant })
         res.json({
@@ -47,7 +48,6 @@ const changeRestaurantName = async (req, res) => {
         })
     } catch (err) {
         console.error('Error PUT / restaurants / :id !!!', err)
-
         res.status(500).json({ message: "There was a problem here Error PUT / restaurants / :id sorry:(" })
     }
 }
@@ -62,7 +62,6 @@ const deleteRestaurant = async (req, res) => {
         })
     } catch (err) {
         console.error('Error PUT / restaurants / :id !!!', err)
-
         res.status(500).json({ message: "There was a problem here Error PUT / restaurants / :id sorry:(" })
     }
 }

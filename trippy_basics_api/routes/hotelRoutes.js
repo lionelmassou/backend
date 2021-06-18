@@ -1,6 +1,12 @@
 const express = require("express")
 const router = express.Router()
-const { getHotels, getHotel, addHotel, changeHotelName, deleteHotel } = require("../controllers/hotelControllers")
+const {
+    getHotels,
+    getHotel,
+    addHotel,
+    changeHotelName,
+    deleteHotel } = require("../controllers/hotelControllers")
+
 const { validationHotels } = require("../middlewares/validationsMiddlewares")
 
 router.get("/", getHotels)
