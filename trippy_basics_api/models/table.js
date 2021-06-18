@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/trippy_basics")
 
 const tableSchema = mongoose.Schema({
-    seat: Number,
+    seat: { type: Number, required: true },
     isVIP: Boolean
 })
 
-const Table = mongoose.model('Table', tableSchema)
+const tableModel = mongoose.model('Table', tableSchema)
 
-module.exports = Table
+module.exports = tableModel
