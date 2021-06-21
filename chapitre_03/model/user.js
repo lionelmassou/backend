@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, unique: true },
     profilePicture: String,
     created: { type: Date, default: Date.now }
 })
 
-const User = mongoose.model("User", userSchema)
+const userModel = mongoosea.model("User", userSchema)
 
-module.exports = User
+module.exports = userModel

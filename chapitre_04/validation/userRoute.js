@@ -16,8 +16,8 @@ app.use(express.json());
 router.get("/", debug, getAllUser)
 
 router.post('/add', debug,
-    expressValidator.body("username").exists().isLength({ min: 4 }),
-    expressValidator.body("email").exists().isEmail(),
+    expressValidator.body("username").exists().isLength({ min: 4 }).trim(),
+    expressValidator.body("email").exists().isEmail().normalizeEmail(),
     expressValidator.body("age").exists().isInt({ min: 10, max: 99 }),
     expressValidator.body("city").isIn(['Paris', 'Tokyo', 'Los Angeles']),
     userAddAfterValidation

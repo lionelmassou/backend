@@ -1,6 +1,7 @@
 const expressValidator = require("express-validator");
+// const { validationResult } = require('express-validator/check');
+// const { sanitizeQuery } = require('express-validator/filter')
 const UserModel = require('../model/userModel');
-
 
 const userAddAfterValidation = async (req, res) => {
     try {
