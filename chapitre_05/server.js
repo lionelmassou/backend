@@ -25,9 +25,9 @@ app.use(express.json())
 app.get("/signup", async (req, res) => {
     try {
 
-        const users = await UserModel.find({})
+        const user = await UserModel.find({})
 
-        res.json({ users })
+        res.json(user)
 
     } catch (error) {
         console.log("Error:", error)
@@ -40,13 +40,6 @@ app.post("/signup", async (req, res) => {
 
     expressValidator.body("username").exists().isLength({ min: 4 })
     expressValidator.body("password").exists().isLength({ min: 4 })
-
-    // exports.signup = (req, res) => {
-    //     const user = new User({
-    //         username: req.body.username,
-    //         email: req.body.email,
-    //         password: bcrypt.hashSync(req.body.password, 8)
-    //     });
 
     try {
 
@@ -66,12 +59,21 @@ app.post("/signup", async (req, res) => {
 
             const newUser = await UserModel.create({ username: userName, password: userPassword })
 
-            console.log("newUser is : ", newUser);
+            // console.log("newUser is : ", newUser);
+
+            if (!newUser) {
+                return 'Username or password is incorrect'
+            } else {
+                // create a jwt token that is valid for 7 days
+                const token = jwt.sign({userId: mongoose.isValidObjectId()}, config.secret, { expiresIn: '7d' });
+            }
+
 
             res.json({
                 success: true,
                 message: 'User will be saved',
-                newUser
+                newUser,
+                token
             })
         }
 
