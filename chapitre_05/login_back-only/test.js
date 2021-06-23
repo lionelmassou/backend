@@ -65,7 +65,9 @@ app.post("/signup", async (req, res) => {
                 return 'Username or password is incorrect'
             } else {
                 // create a jwt token that is valid for 7 days
-                const token = jwt.sign({userId: mongoose.isValidObjectId()}, config.secret, { expiresIn: '7d' });
+                const token = jwt.sign({
+                    userId: user._id, 
+                    config.secret, { expiresIn: '7d' });
             }
 
 
