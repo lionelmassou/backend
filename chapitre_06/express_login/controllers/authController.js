@@ -4,14 +4,32 @@ const jwt = require("jsonwebtoken")
 const config = require("../config.js")
 
 const signup = async (req, res) => {
+
     try {
-        const username = req.body.username
-        const password = bcryptjs.hashSync(req.body.password)
-        // const role = req.body.role
+        const email = req.body.email
+        // console.log("mail: ", email);
+        // const password = bcryptjs.hashSync(req.body.password)
+        let password = req.body.password
+        // console.log("password: ", password);
+        const confirmPassword = req.body.confirmPassword
+        // console.log("password: ", confirmPassword);
+        const firstname = req.body.firstname
+        const surname = req.body.surname
+        const dateofbirth = req.body.dateofbirth
+        const role = req.body.role
 
-        const user = await userModel.create({ username, password, role })
+        if (password === confirmPassword) {
+            password = bcryptjs.hashSync(req.body.password)
 
-        res.json({ message: "User was created!", user })
+            const user = await userModel.create({ email, password, firstname, surname, dateofbirth, role })
+            res.json({ message: "User was created!", user })
+
+        } else {
+            res.json({
+                message: "the password isn't the same"
+            })
+        }
+
     } catch (error) {
         console.log("Error: ", error)
         res.status(500).json({ message: "There was an error while treating the request" })
@@ -20,8 +38,8 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const username = req.body.username
-        const user = await userModel.findOne({ username })
+        const email = req.body.email
+        const user = await userModel.findOne({ email })
 
         const result = bcryptjs.compareSync(req.body.password, user.password)
 
@@ -44,4 +62,4 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { signup , login }
+module.exports = { signup, login }

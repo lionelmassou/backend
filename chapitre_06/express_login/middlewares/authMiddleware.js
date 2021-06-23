@@ -4,7 +4,7 @@ const config = require("../config.js")
 
 const verifyToken = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(" ")[1]
+        const token = req.headers.authorization.split(" ")[1] 
 
         const result = jwt.verify(token, config.secret)
 
